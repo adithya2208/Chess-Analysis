@@ -1,0 +1,6 @@
+books
+.vscode
+.DS_Store
+pgn/*_parsed.pgn
+pgn/output.pgn
+chess.log
