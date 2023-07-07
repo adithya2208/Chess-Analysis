@@ -17,9 +17,15 @@ PLAYER_NAME = "mipola"
 ENGINE_PATH = r"/usr/local/bin/stockfish"
 ENGINE_OPTIONS = {"Threads": 2}
 
+# Setup logging
+logging.basicConfig(
+    filename=LOG_OUTPUT, encoding="utf-8", level=logging.INFO, filemode="w"
+)
 
+
+#This function needs work. Right now we only check if we move in or out of mate but we should also check if we move from something like mate in 1 to mate in 11. Also Right now I return inf as centipawn loss for a mate blunder but might need to change this
 def checkWrongMove(prevScore, curScore, move):
-    if curScore.is_mate():
+    if (curScore.is_mate() and not prevScore.is_mate()) or (prevScore.is_mate() and not curScore.is_mate()):
         return [True, float("inf")]
     if prevScore.turn:
         cpLost = prevScore.white().score() - curScore.white().score()
@@ -51,10 +57,7 @@ def pgnCleanup(pgnPath):
 def main():
     startTime = time.time()
 
-    # Setup logging
-    logging.basicConfig(
-        filename=LOG_OUTPUT, encoding="utf-8", level=logging.INFO, filemode="w"
-    )
+
 
     # Setup engine
     engine = chess.engine.SimpleEngine.popen_uci(ENGINE_PATH)
